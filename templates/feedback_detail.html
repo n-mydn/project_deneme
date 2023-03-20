@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<br>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-success">Ad-Soyad</th>
+      <th scope="col" class="text-success">Email</th>
+      <th scope="col" class="text-success">Telefon Numarası</th>
+      <th scope="col" class="text-success">Talep-Şikayet Oluşturulma Tarihi</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td> 
+            {% if feedback.Name == None or feedback.Surname == None %}
+                <div class="col-6">Girilmemiş</div>
+            {% else %}
+                <div class="col-6">{{feedback.Name}} {{feedback.Surname}}</div>
+            {% endif %}
+            </td>
+            <td>{{feedback.Email}}</td>
+            <td>{{feedback.PhoneNumber}}</td>
+            <td>{{feedback.FeedbackOpenDate}}</td>
+        </tr>       
+  </tbody>
+</table><br>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-success">Talep-Şikayet Tipi</th>
+      <th scope="col" class="text-success">Talep-Şikayet Sahibi Personel</th>
+      <th scope="col" class="text-success">Talep-Şikayet Nedeni(Genel)</th>
+      <th scope="col" class="text-success">Talep-Şikayet Nedeni</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td>{{feedback.IdFeedbackType}}</td>
+            <td>
+                {% for f_personel in feedback.IdFeedbackPersonel.all %}
+                    <ul><li>{{f_personel.name}}</li></ul>
+                {% endfor %}
+            </td>
+            <td> 
+                {% for f_source in feedback.IdFeedbackSource.all %}
+                    <ul><li>{{f_source.name}}</li></ul>
+                {% endfor %}
+            </td>
+            <td>
+                {% for f_reason in feedback.IdFeedbackReason.all %}
+                    <ul><li>{{f_reason.name}}</li></ul>
+                {% endfor %}
+            </td>
+        </tr>       
+  </tbody>
+</table><br>
+
+<h6 class="text-success"><b>İçerik:</b></h6><p>{{feedback.Content}}</p><br>
+<h6 class="text-success"><b>Resim:</b></h6>
+{% if feedback.Photo == "" %}
+    <p>Yüklenmemiş</p>
+{% else %}
+    <p>{{feedback.Photo}}</p>
+{% endif %}
+<br><br>
+
+    <table class="table table-bordered">
+    <thead>
+        <tr>
+        <th scope="col" class="text-warning">Talep-Şikayet Öncelik Seviyesi</th>
+        <th scope="col" class="text-warning">Talep-Şikayet Son İşlem Saati</th>
+        <th scope="col" class="text-warning">Talep ve Şikayetin Yanıtı İçin Gerekli Zaman(Gün)</th>
+        <th scope="col" class="text-warning">Geçen Süre</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>{{feedback.IdFeedbackPriorityLevel}}</td>
+                <td>{{feedback.FeedbackClosedDate}}</td>
+                <td>{{feedback.LastSolveDate}}</td>
+                <td>{{feedback.DurationTime}} Gün</td>
+            </tr>       
+    </tbody>
+    </table><br>
+
+
+{% endblock  %}

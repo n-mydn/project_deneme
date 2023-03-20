@@ -1,0 +1,169 @@
+{% extends "department_admin/layout.html" %}
+
+{% block content %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-success">Ad-Soyad</th>
+      <th scope="col" class="text-success">Email</th>
+      <th scope="col" class="text-success">Telefon Numarası</th>
+      <th scope="col" class="text-success">Talep-Şikayet Oluşturulma Tarihi</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td> 
+            {% if feedback.Name == None or feedback.Surname == None %}
+                <div class="col-6">Girilmemiş</div>
+            {% else %}
+                <div class="col-6">{{feedback.Name}} {{feedback.Surname}}</div>
+            {% endif %}
+            </td>
+            <td>{{feedback.Email}}</td>
+            <td>{{feedback.PhoneNumber}}</td>
+            <td>{{feedback.FeedbackOpenDate}}</td>
+        </tr>       
+  </tbody>
+</table><br>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-success">No</th>
+      <th scope="col" class="text-success">Talep-Şikayet Tipi</th>
+      <th scope="col" class="text-success">Talep-Şikayet Sahibi Personel</th>
+      <th scope="col" class="text-success">Talep-Şikayet Nedeni(Genel)</th>
+      <th scope="col" class="text-success">Talep-Şikayet Nedeni</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td><b>{{feedback.id}}</b></td>
+            <td>{{feedback.IdFeedbackType}}</td>
+            <td>
+                {% for f_personel in feedback.IdFeedbackPersonel.all %}
+                    <ul><li>{{f_personel.name}}</li></ul>
+                {% endfor %}
+            </td>
+            <td> 
+                {% for f_source in feedback.IdFeedbackSource.all %}
+                    <ul><li>{{f_source.name}}</li></ul>
+                {% endfor %}
+            </td>
+            <td>
+                {% for f_reason in feedback.IdFeedbackReason.all %}
+                    <ul><li>{{f_reason.name}}</li></ul>
+                {% endfor %}
+            </td>
+        </tr>       
+  </tbody>
+</table><br>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-success">Talep-Şikayet Öncelik Seviyesi</th>
+      <th scope="col" class="text-success">Talep-Şikayet Durumu</th>
+      <th scope="col" class="text-success">Talep-Şikayet Son İşlem Saati</th>
+      <th scope="col" class="text-success">Talep-Şikayet Yanıtı İçin Son Tarih</th>
+      <th scope="col" class="text-success">Geçen Zaman</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td>{{feedback.IdFeedbackPriorityLevel}}</td>
+            <td>{{feedback.IdFeedbackStatus}}</td>
+            <td>{{feedback.FeedbackClosedDate}}</td>
+            <td><b>{{feedback.LastSolveDate}}</b></td>
+            <td>{{feedback.DurationTime}}</td>
+        </tr>       
+  </tbody>
+</table><br>
+
+<h6 class="text-success"><b>İçerik:</b></h6><p>{{feedback.Content}}</p><br>
+<h6 class="text-success"><b>Resim:</b></h6>
+{% if feedback.Photo %}
+    <img src="{{feedback.Photo.url}}" class="img-fluid">
+{% else %}
+    <p>Yüklenmemiş</p>
+{% endif %}
+<br><br>
+{% if feedback_status %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-danger">Geri Bildirim Tarihi</th>
+      <th scope="col" class="text-danger">Geri Bildirim Notu</th>
+      <th scope="col" class="text-danger">Geri Bildirim Dosyası</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td>{{feedback_status.history_date}}</td>
+            <td>{{feedback_status.history_note}}</td>
+            {% if feedback_status.history_file %}
+                <td><a href= "{% url 'feedback:files_read' feedback_status.id %}" >{{feedback_status.history_file}}</a></td>
+            {% else %}
+                <td>Dosya Yüklenmemiş</td>
+            {% endif %}
+        </tr>       
+  </tbody>
+</table><br> 
+{% if feedback.IdFeedbackStatus == "İşlemde" %}
+<div class="d-flex justify-content-end ">
+      <div class="col-example">
+        <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Talep-Şikayet Geri Bildirimi Güncelleme</button>
+      </div>
+    </div><br>
+    {% load crispy_forms_tags %}
+        <div class="collapse" id="collapseExample">
+            <div class="alert alert-danger">
+                Önceden Oluşturulmuş Geri Bildirim Bulunmaktadır!
+            </div><br>
+            <h3 class="text-success">Talep-Şikayet Geri Bildirimi Güncelleme</h3>
+            <hr>
+            <h6 class="text-warning" >* Alanların Doldurulması Zorunludur!</h6><br>
+            <div class="row">
+                <div class = "col-md-6 offset-md-3">
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <br>
+                        <button type="submit" class="btn btn-danger">Oluştur</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endif %}
+
+{% else %}
+    <div class="alert alert-danger">
+        Talep-Şikayet İçin Geri Bildirim Oluşturulmamıştır!
+    </div><br>
+    <div class="d-flex justify-content-end ">
+      <div class="col-example">
+        <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Talep-Şikayet İçin Geri Bildirimi Oluşturma</button>
+      </div>
+    </div><br>
+    {% load crispy_forms_tags %}
+    <div class="collapse" id="collapseExample">
+        <h3 class="text-success">Talep-Şikayet Geri Bildirimi Oluşturma</h3>
+        <hr>
+        <h6 class="text-warning" >* Alanların Doldurulması Zorunludur!</h6><br>
+        <div class="row">
+            <div class = "col-md-6 offset-md-3">
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <br>
+                    <button type="submit" class="btn btn-danger">Oluştur</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock  %}

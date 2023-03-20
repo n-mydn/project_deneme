@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<br>
+<h4 class="text-danger">{{dprt.name}} Departmanı</h4>
+<br><br>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Tip</th>
+      <th scope="col">Neden</th>
+      <th scope="col">Detay</th>
+      <th scope="col">Personel</th>
+      <th scope="col">Oluşturulma Tarihi</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+       {% for feedback in feedbacks %}
+        <tr>
+            <td>{{feedback.IdFeedbackType}}</td>
+            <td>
+            {% for f_source in feedback.IdFeedbackSource.all %}
+                <ul><li>{{f_source.name}}</li></ul>
+            {% endfor %}
+            </td>
+            <td>
+            {% for f_reason in feedback.IdFeedbackReason.all %}
+                <ul><li>{{f_reason.name}}</li></ul>
+            {% endfor %}
+            </td>
+            <td>
+            {% for f_personel in feedback.IdFeedbackPersonel.all %}
+                <ul><li>{{f_personel.name}}</li></ul>
+            {% endfor %}
+            </td>
+            <td>{{feedback.FeedbackOpenDate}}</td>
+            {% if request.user.username == "admin" %}
+                <td><a href="{% url 'feedback:admin_feedback_detail' feedback.id %}" class="text-danger">İncele</a></td>
+            {% else %}
+                <td><a href="{% url 'feedback:feedback_detail' feedback.id %}" class="text-danger">İncele</a></td>
+            {% endif %}
+
+            
+        </tr>
+ {% endfor %}
+  </tbody>
+</table>
+
+{% endblock  %}

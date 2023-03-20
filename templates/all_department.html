@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<table class="table table-bordered">
+
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Aktif Departmanlar</th>
+      <th scope="col">Pasif Departmanlar</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for department in departments %}
+        <tr>
+            <td>
+            {% if department.status == "Aktif" %}
+                <a class="text-success" href="{% url 'department_detail' department.id %}"><b>{{department.name}}</b></a>
+            {% endif %}
+            </td>
+            <td class= "text-warning">
+            {% if department.status == "Pasif" %}
+                <b>{{department.name}}</b>
+            {% endif %}
+            </td>
+        </tr>
+  {% endfor %}
+  </tbody>
+
+</table>
+
+{% endblock  %}

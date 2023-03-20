@@ -1,0 +1,48 @@
+views.py
+
+def index(request):
+    f_type = "Personelin Tutum ve Davranışı"
+    feedbacks = FeedbackReason.objects.get(name=f_type).feedback_set.all()
+    context={
+        "feedbacks":feedbacks
+    }
+    return render(request,"index.html",context)
+
+
+html
+
+{% extends "layout.html" %}
+
+{% block body %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">IdFeedbackType</th>
+      <th scope="col">IdFeedbackSource</th>
+      <th scope="col">IdFeedbackReason</th>
+      <th scope="col">IdDepartment</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for feedback in feedbacks %}
+        <tr>
+      <th scope="row">{{feedback.IdFeedbackType}}</th>
+      <td>
+      {% for f_source in feedback.IdFeedbackSource.all %}
+          <ul><li>{{f_source.name}}</li></ul>
+      {% endfor %}
+      </td>
+      <td>
+      {% for f_reason in feedback.IdFeedbackReason.all %}
+          <ul><li>{{f_reason.name}}</li></ul>
+      {% endfor %}
+      </td>
+      <td>{{feedback.IdDepartment}}</td>
+
+    </tr>
+  {% endfor %}
+
+  </tbody>
+</table>
+
+{% endblock  %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    {% load crispy_forms_tags %}
+    <h3 class="text-success">Departman Bilgilerini Güncelleme</h3>
+    <hr>
+    <h6 class="text-warning" >* Alanların Doldurulması Zorunludur!</h6><br>
+    <div class="row">
+        <div class = "col-md-6 offset-md-3">
+            <form method="POST" >
+                {% csrf_token %}
+                {{form|crispy}}
+                <br>
+                <button type="submit" class="btn btn-danger">Güncelle</button>
+            </form>
+        </div>
+    </div>
+{% endblock  %}

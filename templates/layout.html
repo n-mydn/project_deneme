@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %} 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hastane Feedback</title>
+
+    <link  rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}" ></script>
+    
+</head>
+<body>
+    
+    {% include "includes/navbar.html" %}
+   
+    <div style="margin-top: 75px; margin-bottom:100px;" class="container-lg" >
+        
+        {% if messages %}
+            {% for message in messages %}
+                
+                {% if message.tags == "info" %}
+                    <div class="alert alert-danger">{{ message }}</div>
+            
+                {% else %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+
+                {% endif %}
+            {% endfor %}
+
+        {% endif %}
+        
+        {% block body %}
+    
+        {% endblock body %}
+        
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" ></script>
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}" ></script>
+</body>
+</html>
+
+<!--   
+
+
+ <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+-->

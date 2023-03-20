@@ -1,0 +1,77 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+
+{% if feedbacks %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" class="text-info">No</th>
+      <th scope="col" class="text-info">Departman</th>
+      <th scope="col" class="text-info">Durum</th>
+      <th scope="col" class="text-info">Tür</th>
+      <th scope="col" class="text-info">Neden</th>
+      <th scope="col" class="text-info">Oluşturulma Tarihi</th>
+      <th scope="col" class="text-info">Öncelik Seviyesi</th>
+      <th scope="col" class="text-info">Son İşlem Tarihi</th>
+      <th scope="col" class="text-info">Geçen Zaman</th>
+      <th scope="col" class="text-info">İncele</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for feedback in feedbacks %}
+              <tr>
+                <td><b>{{feedback.id}}</b></td>
+                <td>{{feedback.IdDepartment}}</td>
+                <td>{{feedback.IdFeedbackStatus.name}}</td>
+                <td>{{feedback.IdFeedbackType}}</td>
+                <td>
+                {% for f_reason in feedback.IdFeedbackReason.all %}
+                    <ul><li>{{f_reason.name}}</li></ul>
+                {% endfor %}
+                </td>
+                <td>{{feedback.FeedbackOpenDate}}</td>
+                {% if feedback.IdFeedbackPriorityLevel == None %}
+                    <td class= "text-success">İncele --> Güncelle </td>
+                {% else %}
+                    <td>{{feedback.IdFeedbackPriorityLevel}}</td>
+                {% endif %}
+                <td>{{feedback.FeedbackClosedDate}}</td>
+                <td>{{feedback.DurationTime}}</td>
+                <td><a href="{% url 'feedback:admin_feedback_detail' feedback.id %}" class="text-danger">
+                <b><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                </svg></b></a></td>   
+              </tr>  
+
+        {% endfor %}
+      </tbody>
+    </table><br>
+        <div class="d-flex justify-content-end ">
+            <div class="pagination">
+                <span class="step-links">
+                    {% if feedbacks.has_previous %}
+                        <a class="text-primary" href="?sayfa={{ feeedbacks.previous_page_number }}{% if request.GET.keyword %}&keyword={{ request.GET.keyword }}{% endif %}"><b><<</b></a>
+                    {% endif %}
+
+                    <span class="text-primary">
+                        <b>{{ feedbacks.number }} / {{ feedbacks.paginator.num_pages }}</b>
+                    </span>
+
+                    {% if feedbacks.has_next %}
+                        <a class="text-primary" href="?sayfa={{ feedbacks.next_page_number }}{% if request.GET.keyword %}&keyword={{ request.GET.keyword }}{% endif %}"><b>>></b></a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+{% else %}
+<div class="alert alert-danger">
+    Açık Talep-Şikayet Bulunmamaktadır!
+</div>
+
+{% endif %}
+
+{% endblock content %}
+
